@@ -1,3 +1,5 @@
+# @author Keenan Leverty
+
 import re
 
 ll1_table = [
