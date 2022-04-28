@@ -27,12 +27,12 @@ public class Tape {
         tape.add(new Node(tape.get(tape.size() - 1), null, 'B'));
 
         for(int i = 1; i < data.length() + 1; i++) {
-            tape.get(i).setHead(tape.get(i-1));
-            tape.get(i).setTail(tape.get(i+1));
+            tape.get(i).setPrev(tape.get(i-1));
+            tape.get(i).setNext(tape.get(i+1));
             tape.get(i).setChar(data.charAt(i-1));
         }
 
-        tape.get(0).setTail(tape.get(1));
+        tape.get(0).setNext(tape.get(1));
     }
 
     public char getData() {

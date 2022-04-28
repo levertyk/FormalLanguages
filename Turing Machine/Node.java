@@ -1,11 +1,11 @@
 public class Node {
-    Node head;
-    Node tail;
+    Node prev;
+    Node next;
     char data;
 
-    Node(Node head, Node tail, char character) {
-        this.head = head;
-        this.tail = tail;
+    Node(Node prev, Node next, char character) {
+        this.prev = prev;
+        this.next = next;
         this.data = character;
     }
 
@@ -13,12 +13,12 @@ public class Node {
         data = d;
     }
 
-    public void setHead(Node head) {
-        head = head.head;
+    public void setPrev(Node prev) {
+        this.prev = prev;
     }
 
-    public void setTail(Node tail) {
-        tail = tail.tail;
+    public void setNext(Node next) {
+        this.next = next;
     }
 
     public void setChar(char c) {
