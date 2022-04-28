@@ -27,12 +27,12 @@ public class TuringMachine {
     }
 
     private void process() {
-        
+
         while(!halt && state != 11) {
             Move tempMove = null;
 
             try{
-                tempMove = turingTable[state][tape.getData()];
+                tempMove = turingTable[state][getIndex(tape.getData())];
             } catch(Exception e) {
                 halt = true;
                 break;
@@ -57,6 +57,21 @@ public class TuringMachine {
         }
     }
 
+    private int getIndex(char c) {
+        switch (c) {
+            case 'B' : return 0;
+            case 'a' : return 1;
+            case 'b' : return 2;
+            case 't' : return 3;
+            case 'u' : return 4;
+            case 'v' : return 5;
+            case 'w' : return 6;
+            case 'X' : return 7;
+            case 'Y' : return 8;
+            default : return -1;
+        }
+    }
+
     public String toString() {
         if(halt) return "Turing Machine halted, the string is not in the language.";
         else if (state == 11) return"The string is in the language";
@@ -67,11 +82,11 @@ public class TuringMachine {
         final Scanner sc = new Scanner(System.in);
 
         System.out.println("Enter the string to test {XX} with the alphabet {a, b}*");
-        String input = sc.next();
+        // String input = sc.next();
 
-        sc.close();
+        // sc.close();
 
-        TuringMachine machine = new TuringMachine(input);
+        TuringMachine machine = new TuringMachine("abbabb");
 
         System.out.println(machine.toString());
     }

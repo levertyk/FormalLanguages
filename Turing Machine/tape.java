@@ -7,12 +7,12 @@ public class Tape {
 
     Tape() {
         tape = new ArrayList<Node>();
-        pointer = 0;
+        pointer = 1;
     }
 
     Tape(String input) {
         tape = new ArrayList<Node>();
-        pointer = 0;
+        pointer = 1;
         loadData(input);
     }
 
