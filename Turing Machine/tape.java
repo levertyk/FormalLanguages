@@ -2,18 +2,21 @@ import java.util.ArrayList;
 
 public class Tape {
     
-    ArrayList<Node> tape = new ArrayList<Node>();
-    int pointer = 0;
+    ArrayList<Node> tape;
+    int pointer;
 
     Tape() {
-        
+        tape = new ArrayList<Node>();
+        pointer = 0;
     }
 
     Tape(String input) {
+        tape = new ArrayList<Node>();
+        pointer = 0;
         loadData(input);
     }
 
-    private void loadData(String data) {
+    public void loadData(String data) {
 
         tape.add(new Node(null, null, 'B'));
 
@@ -26,14 +29,18 @@ public class Tape {
         for(int i = 1; i < data.length() + 1; i++) {
             tape.get(i).setHead(tape.get(i-1));
             tape.get(i).setTail(tape.get(i+1));
-            tape.get(i).setChar(data.charAt(i));
+            tape.get(i).setChar(data.charAt(i-1));
         }
 
         tape.get(0).setTail(tape.get(1));
     }
 
     public char getData() {
-        return tape.get(0).getChar();
+        return tape.get(pointer).getChar();
+    }
+
+    public void setData(char c) {
+        tape.get(pointer).setChar(c);
     }
 
     public void moveLeft() {

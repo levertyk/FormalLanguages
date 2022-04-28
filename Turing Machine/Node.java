@@ -4,9 +4,9 @@ public class Node {
     char data;
 
     Node(Node head, Node tail, char character) {
-        head = head.head;
-        tail = tail.tail;
-        data = character;
+        this.head = head;
+        this.tail = tail;
+        this.data = character;
     }
 
     Node(char d) {
