@@ -7,7 +7,7 @@ public class TuringMachine {
         { new Move('B', 'R', 11), new Move('t', 'R', 1), new Move('u', 'R', 1), new Move('t', 'L', 4), new Move('u', 'L', 4) },
         { new Move('B', 'L', 2), new Move('a', 'R', 1), new Move('b', 'R', 1), null, null, new Move('v', 'L', 2), new Move('w', 'L', 2) },
         { null, new Move('v', 'L', 3), new Move('w', 'L', 3) },
-        { null, new Move('a', 'L', 3), new Move('b', 'L', 3) },
+        { null, new Move('a', 'L', 3), new Move('b', 'L', 3), new Move('t', 'R', 0), new Move('u', 'R', 0) },
         { new Move('B', 'R', 5), null, null, new Move('t', 'L', 4), new Move('u', 'L', 4) },
         { null, null, null, new Move('X', 'R', 6), new Move('X', 'R', 8), null, null, null, new Move('Y', 'R', 10) },
         { null, null, null, new Move('t', 'R', 6), new Move('u', 'R', 6), new Move('Y', 'L', 7) },
@@ -20,6 +20,8 @@ public class TuringMachine {
     Tape tape = new Tape();
     int state;
     boolean halt = false;
+    int errorCode = -1;
+    String errorMessage = "";
 
     TuringMachine(String input) {
         tape.loadData(input);
@@ -34,12 +36,16 @@ public class TuringMachine {
             try{
                 tempMove = turingTable[state][getIndex(tape.getData())];
             } catch(Exception e) {
+                System.out.println(tape.getData());
                 halt = true;
+                errorCode = 0;
+                errorMessage = e.getMessage();
                 break;
             }
 
             if(tempMove == null) {
                 halt = true;
+                errorCode = 1;
                 break;
             } else {
                 if(tempMove.getDirection() == 'R') {
@@ -73,9 +79,9 @@ public class TuringMachine {
     }
 
     public String toString() {
-        if(halt) return "Turing Machine halted, the string is not in the language.";
+        if(halt) return "Turing Machine halted, the string is not in the language.\nError code:\t" + errorCode + "\nError Message:\t" + errorMessage + "\nState:\t" + state + "\nTape:\t" + tape.toString();
         else if (state == 11) return"The string is in the language";
-        else return "Turing Machine failed, the string is not in the language.";
+        else return "Turing Machine failed, the string is not in the language.\nError code:\t" + errorCode + "\nError Message:\t" + errorMessage + "\nState:\t" + state + "\nTape:\t" + tape.toString();
     }
     
     public static void main(String[] args) {

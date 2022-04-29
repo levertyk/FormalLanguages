@@ -50,4 +50,14 @@ public class Tape {
     public void moveRight() {
         pointer += 1;
     }
+
+    public String toString() {
+        String output = "";
+
+        for(Node n : tape) {
+            output += n.getChar() + "\t";
+        }
+
+        return output;
+    }
 }
