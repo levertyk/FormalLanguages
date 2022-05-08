@@ -1,98 +1,145 @@
 import java.util.Scanner;
 
 public class TuringMachine {
-
-    Move turingTable[][] = {
-        //  B   a   b   t   u   v   w   X   Y
-        { new Move('B', 'R', 11), new Move('t', 'R', 1), new Move('u', 'R', 1), new Move('t', 'L', 4), new Move('u', 'L', 4) },
-        { new Move('B', 'L', 2), new Move('a', 'R', 1), new Move('b', 'R', 1), null, null, new Move('v', 'L', 2), new Move('w', 'L', 2) },
-        { null, new Move('v', 'L', 3), new Move('w', 'L', 3) },
-        { null, new Move('a', 'L', 3), new Move('b', 'L', 3), new Move('t', 'R', 0), new Move('u', 'R', 0) },
-        { new Move('B', 'R', 5), null, null, new Move('t', 'L', 4), new Move('u', 'L', 4) },
-        { null, null, null, new Move('X', 'R', 6), new Move('X', 'R', 8), null, null, null, new Move('Y', 'R', 10) },
-        { null, null, null, new Move('t', 'R', 6), new Move('u', 'R', 6), new Move('Y', 'L', 7) },
-        { null, null, null, new Move('t', 'L', 7), new Move('u', 'L', 7), null, null, new Move('X', 'R', 5) },
-        { null, null, null, null, new Move('1', '1', 9) },
-        { null, null, null, new Move('t', 'R', 9), new Move('u', 'R', 9), null, new Move('Y', 'L', 7), null, new Move('Y', 'R', 9) },
-        { new Move('B', 'R', 11), null, null, null, null, null, null, null, new Move('Y', 'R', 10) }
-    };
-
-    Tape tape = new Tape();
     int state;
     boolean halt = false;
-    int errorCode = -1;
-    String errorMessage = "";
+
+    char tempInput[];
+    int position = 1;
 
     TuringMachine(String input) {
-        tape.loadData(input);
+        tempInput = ("$" + input + "$").toCharArray();
         process();
     }
 
     private void process() {
 
-        while(!halt && state != 11) {
-            Move tempMove = null;
+        while(!halt && state != 9) {
 
-            try{
-                tempMove = turingTable[state][getIndex(tape.getData())];
-            } catch(Exception e) {
-                System.out.println(tape.getData());
-                halt = true;
-                errorCode = 0;
-                errorMessage = e.getMessage();
-                break;
-            }
+            char temp = tempInput[position];
 
-            if(tempMove == null) {
-                halt = true;
-                errorCode = 1;
-                break;
-            } else {
-                if(tempMove.getDirection() == 'R') {
-                    tape.setData(tempMove.getReplaceCharacter());
-                    tape.moveRight();
-                    state = tempMove.getNextState();
-                } else if (tempMove.getDirection() == 'L') {
-                    tape.setData(tempMove.getReplaceCharacter());
-                    tape.moveLeft();
-                    state = tempMove.getNextState();
-                } else {
-                    state = tempMove.getNextState();
+            switch(state) {
+                case 0: {
+                    if(temp == 'a') {
+                        tempInput[position] = 'X';
+                        position++;
+                        state = 1;
+                    } else if(temp == 'b') {
+                        tempInput[position] = 'Y';
+                        position++;
+                        state = 1;
+                    } else if(temp == 'X' || temp == 'Y') {
+                        position--;
+                        state = 4;
+                    } else halt = true;
+                    break;
+                }
+                case 1: {
+                    if(temp == 'a' || temp == 'b') {
+                        position++;
+                    } else if(temp == 'Y' || temp == 'X' || temp == '$') {
+                        position--;
+                        state = 2;
+                    } else halt = true;
+                    break;
+                }
+                case 2: {
+                    if(temp == 'a') {
+                        tempInput[position] = 'X';
+                        position--;
+                        state = 3;
+                    } else if(temp == 'b') {
+                        tempInput[position] = 'Y';
+                        position--;
+                        state = 3;
+                    } else halt = true;
+                    break;
+                }
+                case 3: {
+                    if(temp == 'a' || temp == 'b') {
+                        position--;
+                    } else if(temp == 'X' || temp == 'Y') {
+                        position++;
+                        state = 0;
+                    } else halt = true;
+                    break;
+                }
+                case 4: {
+                    if(temp == '$') {
+                        position++;
+                        state = 5;
+                    } else if(temp == 'X') {
+                        tempInput[position] = 'a';
+                        position--;
+                    } else if(temp == 'Y') {
+                        tempInput[position] = 'b';
+                        position--;
+                    } else halt = true;
+                    break;
+                }
+                case 5: {
+                    if(temp == 'b') {
+                        tempInput[position] = 'Y';
+                        position++;
+                        state = 7;
+                    } else if(temp == 'a') {
+                        tempInput[position] = 'X';
+                        position++;
+                        state = 6;
+                    } else if(temp == 'B'){
+                        position--;
+                        state = 9;
+                    } else halt = true;
+                    break;
+                }
+                case 6: {
+                    if(temp == 'a' || temp == 'b' || temp == 'B') {
+                        position++;
+                    } else if(temp == 'X') {
+                        tempInput[position] = 'B';
+                        position--;
+                        state = 8;
+                    } else halt = true;
+                    break;
+                }
+                case 7: {
+                    if(temp == 'a' || temp == 'b' || temp == 'B') {
+                        position++;
+                    } else if(temp == 'Y') {
+                        tempInput[position] = 'B';
+                        position--;
+                        state = 8;
+                    } else halt = true;
+                    break;
+                }
+                case 8: {
+                    if(temp == 'a' || temp == 'b' || temp == 'B') {
+                        position--;
+                    } else if(temp == 'X' || temp == 'Y') {
+                        position++;
+                        state = 5;
+                    } else halt = true;
+                    break;
                 }
             }
         }
     }
 
-    private int getIndex(char c) {
-        switch (c) {
-            case 'B' : return 0;
-            case 'a' : return 1;
-            case 'b' : return 2;
-            case 't' : return 3;
-            case 'u' : return 4;
-            case 'v' : return 5;
-            case 'w' : return 6;
-            case 'X' : return 7;
-            case 'Y' : return 8;
-            default : return -1;
-        }
-    }
-
     public String toString() {
-        if(halt) return "Turing Machine halted, the string is not in the language.\nError code:\t" + errorCode + "\nError Message:\t" + errorMessage + "\nState:\t" + state + "\nTape:\t" + tape.toString();
-        else if (state == 11) return"The string is in the language";
-        else return "Turing Machine failed, the string is not in the language.\nError code:\t" + errorCode + "\nError Message:\t" + errorMessage + "\nState:\t" + state + "\nTape:\t" + tape.toString();
+        if(halt) return "Turing Machine halted, the string is not in the language.";
+        else if (state == 9) return"The string is in the language";
+        else return "Turing Machine failed, the string is not in the language.";
     }
     
     public static void main(String[] args) {
         final Scanner sc = new Scanner(System.in);
 
         System.out.println("Enter the string to test {XX} with the alphabet {a, b}*");
-        // String input = sc.next();
+        String input = sc.next();
 
-        // sc.close();
+        sc.close();
 
-        TuringMachine machine = new TuringMachine("abbabb");
+        TuringMachine machine = new TuringMachine(input);
 
         System.out.println(machine.toString());
     }
